@@ -1,0 +1,57 @@
+﻿@model IEnumerable<URDesign.Models.Furniture>
+@using PagedList.Mvc; //import this so we get our HTML Helper
+@using PagedList; //import this so we can cast our list to IPagedList (only necessary because ViewBag is dynamic)
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vendor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImagePath)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+        </th>
+    </tr>
+
+@foreach (var item in ViewBag.OnePageOfProducts)
+{
+    <tr>
+        <td>
+            @item.Name
+        </td>
+        <td>
+            @item.Vendor
+        </td>
+        <td>
+            <img src=@item.ImagePath style="border:0px;">
+        </td>
+        <td>
+            @item.Price
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=@item.IdFurniture }) |
+            @Html.ActionLink("Details", "Details", new { id = @item.IdFurniture }) |
+            @Html.ActionLink("Delete", "Delete", new { id = @item.IdFurniture })
+        </td>
+    </tr>
+}
+
+</table>
+    <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
+@Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action("Index", new { page }))
