@@ -9,6 +9,8 @@ using System.Web.Mvc;
 using URDesign.Models;
 using PagedList;
 using PagedList.Mvc;
+using System.IO;
+
 
 namespace URDesign.Controllers
 {
@@ -88,16 +90,37 @@ namespace URDesign.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="IdFurniture,Name,Vendor,URL,Price")] Furniture furniture)
+        public ActionResult Edit([Bind(Include = "IdFurniture,Name,Vendor,URL,Price")] Furniture furniture, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
-                
+                if (file != null && file.ContentLength > 0)
+                {
+                    furniture.DrawingFile = file.FileName;
+                    using (Stream inputStream = file.InputStream)
+                    {
+                        MemoryStream memoryStream = inputStream as MemoryStream;
+                        if (memoryStream == null)
+                        {
+                            memoryStream = new MemoryStream();
+                            inputStream.CopyTo(memoryStream);
+                        }
+                        furniture.DrawingFileData = memoryStream.ToArray();
+                    }
+                }
+
                 db.Entry(furniture).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(furniture);
+        }
+
+
+        public FileResult Download(int? id)
+        {
+            Furniture furniture = db.Furniture.Find(id);
+            return File(furniture.DrawingFileData, "application/octet-stream", furniture.DrawingFile);
         }
 
         // GET: /Furniture/Delete/5

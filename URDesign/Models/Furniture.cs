@@ -17,8 +17,8 @@ namespace URDesign.Models
         public decimal Price { get; set; }
         public string Description { get; set; }
         public string URL { get; set; }
-
-        
+        public string DrawingFile { get; set; }
+        public byte[] DrawingFileData { get; set; }        
     }
 
 
