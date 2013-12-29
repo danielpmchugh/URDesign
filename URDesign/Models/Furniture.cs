@@ -3,9 +3,11 @@ using System.Data.Entity;
 using System.Linq;
 using PagedList;
 using PagedList.Mvc;
+using System;
 
 namespace URDesign.Models
 {
+    [Serializable]
     public class Furniture
     {
         [Key]

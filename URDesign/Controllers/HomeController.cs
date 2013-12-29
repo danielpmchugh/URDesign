@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace URDesign.Controllers
 {
@@ -20,11 +21,13 @@ namespace URDesign.Controllers
             return View();
         }
 
+
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
 
             return View();
         }
+
     }
 }

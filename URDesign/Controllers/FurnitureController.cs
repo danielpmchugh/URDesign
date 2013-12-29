@@ -10,6 +10,7 @@ using URDesign.Models;
 using PagedList;
 using PagedList.Mvc;
 using System.IO;
+using System.Web.Script.Serialization;
 
 
 namespace URDesign.Controllers
@@ -90,7 +91,7 @@ namespace URDesign.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdFurniture,Name,Vendor,URL,Price")] Furniture furniture, HttpPostedFileBase file)
+        public ActionResult Edit([Bind(Include = "IdFurniture,Name,ImagePath,Description,Vendor,VendorId,URL,Price")] Furniture furniture, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
@@ -115,7 +116,6 @@ namespace URDesign.Controllers
             }
             return View(furniture);
         }
-
 
         public FileResult Download(int? id)
         {
@@ -156,6 +156,14 @@ namespace URDesign.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        public string ArsenalX11()
+        {
+            
+            var products = db.FindAllProducts(); //returns IQueryable<Product> representing an unknown number of products. a thousand maybe?
+            List<Furniture> furniture = products.ToList();
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            return serializer.Serialize(furniture);
         }
     }
 }
